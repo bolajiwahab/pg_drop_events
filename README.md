@@ -97,13 +97,4 @@ postgres=# SELECT pid,username,query,xact_id,wal_position,object_name,object_typ
  12540 | postgres | ALTER TABLE t.t1 DROP COLUMN a; |    1088 | 2/729F7778   | t.t1.a      | table column | 2021-05-17 20:50:29.168078+08
  12540 | postgres | DROP SCHEMA t CASCADE;          |    1089 | 2/729F7988   | t.t2        | table        | 2021-05-17 20:51:10.929153+08
  12540 | postgres | DROP SCHEMA t CASCADE;          |    1089 | 2/729F7988   | t.t1        | table        | 2021-05-17 20:51:10.929153+08
-
-We expect four records inside `pg_drop_events`
-
-postgres=# SELECT count(*) = 4 FROM pg_drop_events;
- ?column? 
-----------
- t
-(1 row)
-
 ```
