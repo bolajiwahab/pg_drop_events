@@ -131,5 +131,4 @@ DROP EVENT TRIGGER IF EXISTS ZZZ_pg_drop_events;
 CREATE EVENT TRIGGER ZZZ_pg_drop_events ON sql_drop
     EXECUTE PROCEDURE public.pg_drop_events();
 
-COMMENT ON FUNCTION public.pg_drop_events() IS 'logs transaction ids of drop table, 
-drop column statements to aid point in time recovery.';
+COMMENT ON FUNCTION public.pg_drop_events() IS 'logs transaction ids of drop table, drop column statements to aid point in time recovery.';
