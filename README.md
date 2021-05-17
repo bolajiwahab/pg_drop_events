@@ -1,10 +1,9 @@
-# What is min_to_max?
-The **min_to_max** is an **aggregate** that returns a text formatted like: `min_to_max` for any type, where `min` and `max` are minimum and maximum values of the list or column respectively.
-It works on any type and it is successfully tested with text, date, timestamp, integer, numeric and float types. The output can be formatted by the user by calling **min_to_max_config** with default or a specified format. See below user guide.
+# What is pg_drop_events?
+The **pg_drop_events** is a PostgreSQL **extension** that logs transaction ids of drop table, drop column statements to aid point in time recovery: To perform point in time recovery in case of a disaster whereby a table or a table column was mistakenly dropped, you simply specify the `xact_id` you get from the table `pg_drop_events` as the `recovery_target_xid`. See below user guide.
 
-### How min_to_max works?
+### How pg_drop_events works?
 
-`min_to_max` takes result set as an input, build an array of the set and then returns both minimum and maximum of the input set together as a single output.
+`pg_drop_events` uses event trigger to track what statement, what transaction and which user drops a table or a table column. 
 
 ## Documentation
 1. [Supported PostgreSQL Versions](#supported-postgresql-versions)
@@ -13,11 +12,13 @@ It works on any type and it is successfully tested with text, date, timestamp, i
 4. [User Guide](#User-Guide)
 
 ## Supported PostgreSQL Versions
-The ``min_to_max`` should work on the latest version of PostgreSQL but is only tested with these PostgreSQL versions:
+The ``pg_drop_events`` should work on the latest version of PostgreSQL but is only tested with these PostgreSQL versions:
 
 | Distribution            |  Version       | Supported          |
 | ------------------------|----------------|--------------------|
-| PostgreSQL              | Version < 11   | :x:                |
+| PostgreSQL              | Version 9.5     | :heavy_check_mark: |
+| PostgreSQL              | Version 9.6     | :heavy_check_mark: |
+| PostgreSQL              | Version 10     | :heavy_check_mark: |
 | PostgreSQL              | Version 11     | :heavy_check_mark: |
 | PostgreSQL              | Version 12     | :heavy_check_mark: |
 | PostgreSQL              | Version 13     | :heavy_check_mark: |
@@ -27,13 +28,13 @@ The ``min_to_max`` should work on the latest version of PostgreSQL but is only t
 
 ### Installing from source code
 
-You can download the source code of  ``min_to_max`` from [this GitHub page](https://github.com/bolajiwahab/min_to_max.git) or using git:
+You can download the source code of  ``pg_drop_events`` from [this GitHub page](github.com:bolajiwahab/pg_drop_events.git) or using git:
 ```sh
-git clone git@github.com:bolajiwahab/min_to_max.git
+git clone git@github.com:bolajiwahab/pg_drop_events.git
 ```
 Compile and install the extension
 ```sh
-cd /min_to_max
+cd pg_drop_events
 sudo make 
 sudo make install
 ```
@@ -41,123 +42,68 @@ sudo make install
 
 Create the extension using the ``CREATE EXTENSION`` command.
 ```sql
-CREATE EXTENSION min_to_max;
+CREATE EXTENSION pg_drop_events;
 CREATE EXTENSION
 ```
 ## User-Guide
 
-This document describes the configuration, key features and usage of ``min_to_max`` extension.
+This document describes the configuration, key features and usage of ``pg_drop_events`` extension.
 
-For how to install and set up ``min_to_max``, see [README](https://github.com/bolajiwahab/min_to_max/blob/master/README.md).
+For how to install and set up ``pg_drop_events``, see [README](https://github.com/bolajiwahab/pg_drop_events/blob/master/README.md).
 
-After you've installed, create the ``min_to_max`` extension using the ``CREATE EXTENSION`` command.
+After you've installed, create the ``pg_drop_events`` extension using the ``CREATE EXTENSION`` command.
 
 ```sql
-CREATE EXTENSION min_to_max;
+CREATE EXTENSION pg_drop_events;
 CREATE EXTENSION
 ```
 
 ## Usage
 
-### Example 1: Find min and max from a values list comprising of integer values
-
+### Example :
 ```sql
-postgres=# SELECT min_to_max(val) FROM (VALUES(5),(3),(6),(7),(9),(10),(7)) t(val);
- min_to_max 
-------------
- 3 -> 10
+postgres=# CREATE SCHEMA t;
+CREATE SCHEMA
+
+postgres=# CREATE TABLE t.t1(a int);
+CREATE TABLE
+
+postgres=# CREATE TABLE t.t2();
+CREATE TABLE
+
+postgres=# CREATE TABLE t.t3();
+CREATE TABLE
+
+postgres=# DROP TABLE t.t3;
+NOTICE:  table t.t3 dropped by transaction 1085.
+DROP TABLE
+
+postgres=# ALTER TABLE t.t1 DROP COLUMN a;
+NOTICE:  table column t.t1.a dropped by transaction 1088.
+ALTER TABLE
+
+postgres=# DROP SCHEMA t CASCADE;
+NOTICE:  drop cascades to 2 other objects
+DETAIL:  drop cascades to table t.t2
+drop cascades to table t.t1
+NOTICE:  table t.t2 dropped by transaction 1089.
+NOTICE:  table t.t1 dropped by transaction 1089.
+DROP SCHEMA
+
+postgres=# SELECT pid,username,query,xact_id,wal_position,object_name,object_type,xact_start FROM pg_drop_events;
+  pid  | username |              query              | xact_id | wal_position | object_name | object_type  |          xact_start           
+-------+----------+---------------------------------+---------+--------------+-------------+--------------+-------------------------------
+   729 | postgres | drop TABLE tab ;                |     884 | 2/7255F498   | public.tab  | table        | 2021-05-17 19:57:22.435495+08
+ 12540 | postgres | DROP TABLE t.t3;                |    1085 | 2/729E7920   | t.t3        | table        | 2021-05-17 20:49:21.727209+08
+ 12540 | postgres | ALTER TABLE t.t1 DROP COLUMN a; |    1088 | 2/729F7778   | t.t1.a      | table column | 2021-05-17 20:50:29.168078+08
+ 12540 | postgres | DROP SCHEMA t CASCADE;          |    1089 | 2/729F7988   | t.t2        | table        | 2021-05-17 20:51:10.929153+08
+ 12540 | postgres | DROP SCHEMA t CASCADE;          |    1089 | 2/729F7988   | t.t1        | table        | 2021-05-17 20:51:10.929153+08
+
+#### We expect four records inside `pg_drop_events`
+postgres=# SELECT count(*) = 4 AS TRUE FROM pg_drop_events;
+ ?column? 
+----------
+ t
 (1 row)
 
-```
-
-### Example 2: Find min and max from a values list comprising of string values
-```sql
-postgres=# SELECT min_to_max(val) FROM (VALUES('a'),('b'),('c'),('d'),('e'),('f'),('g')) t(val);
- min_to_max 
-------------
- a -> g
-(1 row)
-
-```
-### Example 3: Find min and max from a values list comprising of float values
-```sql
-postgres=# SELECT min_to_max(val) FROM (VALUES(5.1),(3.95),(6.666),(7.222),(9),(10.5),(7.4)) t(val);
-  min_to_max  
---------------
- 3.95 -> 10.5
-```
-### Example 4: Find min and max from a values list comprising of date values
-```sql
-postgres=# SELECT min_to_max(val) FROM (VALUES('2021-01-01'),('2021-01-02'),('2021-01-03'),('2021-01-04')) t(val);
-        min_to_max        
---------------------------
- 2021-01-01 -> 2021-01-04
-(1 row)
-```
-### Example 5: Find min and max from a table comprising of integer, float, string, timestamp and date values
-```sql
-postgres=# CREATE TEMPORARY TABLE min_to_max AS SELECT generate_series(1,1000) AS a, generate_series(1.7,1000)::float AS b,generate_series(timestamp '2019-01-01', '2021-12-31', '1 day') AS c, generate_series(timestamp '2019-01-01', '2021-12-31', '1 day')::date as d,chr(generate_series(65,90)) AS e;
-SELECT 1096
-
-\d min_to_max
-                       Table "public.min_to_max"
- Column |            Type             | Collation | Nullable | Default 
---------+-----------------------------+-----------+----------+---------
- a      | integer                     |           |          | 
- b      | double precision            |           |          | 
- c      | timestamp without time zone |           |          | 
- d      | date                        |           |          | 
- e      | text                        |           |          | 
-
-postgres=# SELECT min_to_max(a),min_to_max(b),min_to_max(c),min_to_max(d),min_to_max(e) FROM min_to_max ;
- min_to_max |  min_to_max  |                 min_to_max                 |        min_to_max        | min_to_max 
-------------+--------------+--------------------------------------------+--------------------------+------------
- 1 -> 1000  | 1.7 -> 999.7 | 2019-01-01 00:00:00 -> 2021-12-31 00:00:00 | 2019-01-01 -> 2021-12-31 | A -> Z
-(1 row)
-
-```
-### Example 6: Find min and max from a values list comprising nulls
-```sql
-postgres=# SELECT min_to_max(val) FROM (VALUES(NULL),(NULL)) t(val);
- min_to_max 
-------------
- 
-(1 row)
-
-```
-### Example 7: Find min and max from a values list comprising of non-null and null values
-```sql
-postgres=# SELECT min_to_max(val) FROM (VALUES(1),(2),(NULL)) t(val);
- min_to_max 
-------------
- 1 -> 2
-(1 row)
-
-```
-### Example 8: Find min and max from a values list comprising of non-empty and empty values
-```sql
-postgres=# SELECT min_to_max(val) FROM (VALUES('a'),('b'),(' ')) t(val);
- min_to_max 
-------------
-   -> b
-(1 row)
-
-```
-### Configuring the output format
-#### Set or reset output to default
-```sql
-postgres=# SELECT min_to_max_config();
- min_to_max_config 
--------------------
- 
-(1 row)
-```
-#### Set output to non-default
-```sql
-postgres=# SELECT min_to_max_config('>>');
-postgres=# SELECT min_to_max(a),min_to_max(b),min_to_max(c),min_to_max(d),min_to_max(e) FROM min_to_max ;
-min_to_max  |   min_to_max   |                  min_to_max                  |         min_to_max         | min_to_max 
--------------+----------------+----------------------------------------------+----------------------------+------------
- 1 >> 1000 | 1.7 >> 999.7 | 2019-01-01 00:00:00 >> 2021-12-31 00:00:00 | 2019-01-01 >> 2021-12-31 | A >> Z
-(1 row)
-```
+````
