@@ -93,7 +93,6 @@ DROP SCHEMA
 postgres=# SELECT pid,username,query,xact_id,wal_position,object_name,object_type,xact_start FROM pg_drop_events;
   pid  | username |              query              | xact_id | wal_position | object_name | object_type  |          xact_start           
 -------+----------+---------------------------------+---------+--------------+-------------+--------------+-------------------------------
-   729 | postgres | drop TABLE tab ;                |     884 | 2/7255F498   | public.tab  | table        | 2021-05-17 19:57:22.435495+08
  12540 | postgres | DROP TABLE t.t3;                |    1085 | 2/729E7920   | t.t3        | table        | 2021-05-17 20:49:21.727209+08
  12540 | postgres | ALTER TABLE t.t1 DROP COLUMN a; |    1088 | 2/729F7778   | t.t1.a      | table column | 2021-05-17 20:50:29.168078+08
  12540 | postgres | DROP SCHEMA t CASCADE;          |    1089 | 2/729F7988   | t.t2        | table        | 2021-05-17 20:51:10.929153+08
