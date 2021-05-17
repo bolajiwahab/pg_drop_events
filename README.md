@@ -98,11 +98,12 @@ postgres=# SELECT pid,username,query,xact_id,wal_position,object_name,object_typ
  12540 | postgres | DROP SCHEMA t CASCADE;          |    1089 | 2/729F7988   | t.t2        | table        | 2021-05-17 20:51:10.929153+08
  12540 | postgres | DROP SCHEMA t CASCADE;          |    1089 | 2/729F7988   | t.t1        | table        | 2021-05-17 20:51:10.929153+08
 
-#### We expect four records inside `pg_drop_events`
-postgres=# SELECT count(*) = 4 AS TRUE FROM pg_drop_events;
+We expect four records inside `pg_drop_events`
+
+postgres=# SELECT count(*) = 4 FROM pg_drop_events;
  ?column? 
 ----------
  t
 (1 row)
 
-````
+```
