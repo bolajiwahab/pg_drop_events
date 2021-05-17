@@ -1,0 +1,14 @@
+CREATE EXTENSION pg_drop_events;
+SELECT pg_sleep(.5);
+ pg_sleep 
+----------
+ 
+(1 row)
+
+SELECT 1;
+ ?column? 
+----------
+        1
+(1 row)
+
+DROP EXTENSION pg_drop_events;
