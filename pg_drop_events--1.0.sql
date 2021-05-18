@@ -1,4 +1,4 @@
-/* min_to_max.sql */
+/* pg_drop_events--1.0.sql */
 -- complain if script is sourced in psql, rather than via CREATE EXTENSION
 
 \echo Use "CREATE EXTENSION pg_drop_events" to load this file. \quit
@@ -9,7 +9,7 @@ BEGIN
     pg_version := setting::int FROM pg_settings WHERE name = 'server_version_num';
 
     IF pg_version < 130000 THEN
-    CREATE TABLE public.pg_drop_events (
+    CREATE TABLE pg_drop_events (
         pid             int,
         username        text,
         query           text,
@@ -20,7 +20,7 @@ BEGIN
         xact_start      timestamp with time zone
     );
     ELSE 
-        CREATE TABLE public.pg_drop_events (
+        CREATE TABLE pg_drop_events (
         pid             int,
         username        text,
         query           text,
@@ -34,7 +34,7 @@ BEGIN
   END;
 $$;
 
-GRANT SELECT ON public.pg_drop_events TO public;
+GRANT SELECT ON pg_drop_events TO public;
 
 DO $$
 DECLARE pg_version int;
@@ -42,7 +42,7 @@ BEGIN
     pg_version := setting::int FROM pg_settings WHERE name = 'server_version_num';
 
     IF pg_version < 100000 THEN
-        CREATE OR REPLACE FUNCTION public.pg_drop_events()
+        CREATE OR REPLACE FUNCTION pg_drop_events()
           RETURNS event_trigger AS $LD$
         DECLARE 
             tbd record;
@@ -56,7 +56,7 @@ BEGIN
             LOOP
                 RAISE NOTICE '% % dropped by transaction %.', tbd.object_type, tbd.object_identity, txid_current();
     
-                INSERT INTO public.pg_drop_events(pid, username, query, xact_id, wal_position, object_name, object_type, xact_start)
+                INSERT INTO pg_drop_events(pid, username, query, xact_id, wal_position, object_name, object_type, xact_start)
                 SELECT pg_backend_pid()
                      , session_user
                      , current_query()
@@ -69,7 +69,7 @@ BEGIN
         END;
         $LD$ LANGUAGE plpgsql;
     ELSIF pg_version >= 130000 THEN
-        CREATE OR REPLACE FUNCTION public.pg_drop_events()
+        CREATE OR REPLACE FUNCTION pg_drop_events()
           RETURNS event_trigger AS $LD$
         DECLARE 
             tbd record;
@@ -83,7 +83,7 @@ BEGIN
             LOOP
                 RAISE NOTICE '% % dropped by transaction %.', tbd.object_type, tbd.object_identity, pg_current_xact_id();
     
-                INSERT INTO public.pg_drop_events(pid, username, query, xact_id, wal_position, object_name, object_type, xact_start)
+                INSERT INTO pg_drop_events(pid, username, query, xact_id, wal_position, object_name, object_type, xact_start)
                 SELECT pg_backend_pid()
                      , session_user
                      , current_query()
@@ -96,7 +96,7 @@ BEGIN
         END;
         $LD$ LANGUAGE plpgsql;
     ELSE      
-        CREATE OR REPLACE FUNCTION public.pg_drop_events()
+        CREATE OR REPLACE FUNCTION pg_drop_events()
           RETURNS event_trigger AS $LD$
         DECLARE 
             tbd record;
@@ -129,6 +129,6 @@ $$;
 DROP EVENT TRIGGER IF EXISTS ZZZ_pg_drop_events;
 
 CREATE EVENT TRIGGER ZZZ_pg_drop_events ON sql_drop
-    EXECUTE PROCEDURE public.pg_drop_events();
+    EXECUTE PROCEDURE pg_drop_events();
 
-COMMENT ON FUNCTION public.pg_drop_events() IS 'logs transaction ids of drop table, drop column statements to aid point in time recovery.';
+COMMENT ON FUNCTION pg_drop_events() IS 'logs transaction ids of drop table, drop column statements to aid point in time recovery.';
