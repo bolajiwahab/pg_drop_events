@@ -56,7 +56,7 @@ BEGIN
             LOOP
                 RAISE NOTICE '% % dropped by transaction %.', tbd.object_type, tbd.object_identity, txid_current();
     
-                INSERT INTO pg_drop_events(pid, username, query, xact_id, wal_position, object_name, object_type, xact_start)
+                INSERT INTO pg_drop_events(pid, username, query, xact_id, wal_position, object_name, object_type, time)
                 SELECT pg_backend_pid()
                      , session_user
                      , current_query()
@@ -83,7 +83,7 @@ BEGIN
             LOOP
                 RAISE NOTICE '% % dropped by transaction %.', tbd.object_type, tbd.object_identity, pg_current_xact_id();
     
-                INSERT INTO pg_drop_events(pid, username, query, xact_id, wal_position, object_name, object_type, xact_start)
+                INSERT INTO pg_drop_events(pid, username, query, xact_id, wal_position, object_name, object_type, time)
                 SELECT pg_backend_pid()
                      , session_user
                      , current_query()
@@ -110,7 +110,7 @@ BEGIN
             LOOP
                 RAISE NOTICE '% % dropped by transaction %.', tbd.object_type, tbd.object_identity, txid_current();
     
-                INSERT INTO pg_drop_events(pid, username, query, xact_id, wal_position, object_name, object_type, xact_start)
+                INSERT INTO pg_drop_events(pid, username, query, xact_id, wal_position, object_name, object_type, time)
                 SELECT pg_backend_pid()
                      , session_user
                      , current_query()
