@@ -17,7 +17,7 @@ BEGIN
         wal_position    pg_lsn,
         object_name     text,
         object_type     text,
-        xact_start      timestamp with time zone
+        time            timestamp with time zone
     );
     ELSE 
         CREATE TABLE pg_drop_events (
@@ -28,7 +28,7 @@ BEGIN
         wal_position    pg_lsn,
         object_name     text,
         object_type     text,
-        xact_start      timestamp with time zone
+        time            timestamp with time zone
     );
     END IF;
   END;
