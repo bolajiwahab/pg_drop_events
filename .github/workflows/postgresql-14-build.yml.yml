@@ -1,0 +1,41 @@
+name: postgresql-14-build
+on: [push]
+
+jobs:
+  build:
+    name: postgresql-14-build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Installs postgres 14
+        run: |
+          sudo apt-get update
+          sudo apt -y install gnupg2
+          wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+          echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" |sudo tee  /etc/apt/sources.list.d/pgdg.list
+          sudo apt update
+          sudo apt -y install postgresql-14 postgresql-common
+
+      - name: Initialize and start postgresql cluster
+        run: |
+          pg_ctlcreatecluster 14 pg_drop_events
+          pg_ctlcluster 14 pg_drop_events start
+    
+      - name: Clone pg_drop_events repository
+        uses: actions/checkout@v2
+
+      - name: Build pg_drop_events
+        run: |
+          sudo make clean && sudo make install
+
+      - name: Start pg_drop_events tests
+        run: |
+          sudo make installcheck
+
+      - name: Report on pg_drop_events test failure
+        uses: actions/upload-artifact@v2
+        if: ${{ failure() }}
+        with:
+          name: Regressions diff
+          path: |
+            regression.diffs
+          retention-days: 1
