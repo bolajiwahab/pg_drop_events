@@ -14,7 +14,7 @@ jobs:
           sudo echo 'create_main_cluster = false' > /etc/postgresql-common/createcluster.d/pg_drop_events.conf
           sudo echo "initdb_options = '-k'" >> /etc/postgresql-common/createcluster.d/pg_drop_events.conf
           if [[ $(pg_lsclusters | grep -i main | grep  5432 | grep 14) ]]; then 
-          pg_dropcluster 14 main
+          sudo pg_dropcluster 14 main
           fi
           
       - name: Installs PostgreSQL 14
