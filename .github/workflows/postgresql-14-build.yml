@@ -8,7 +8,7 @@ jobs:
     steps:
       - name: Prepare the environment
         run: |
-          sudo -iu root
+          sudo - root
           sudo mkdir -p /etc/postgresql-common/createcluster.d
           sudo touch /etc/postgresql-common/createcluster.d/pg_drop_events.conf
           sudo echo 'create_main_cluster = false' > /etc/postgresql-common/createcluster.d/pg_drop_events.conf
