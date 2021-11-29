@@ -83,6 +83,7 @@ BEGIN
         BEGIN
             FOR tbd IN
                 SELECT
+                    o.objid,
                     o.object_type,
                     o.object_identity
                 FROM pg_catalog.pg_event_trigger_dropped_objects() o
@@ -128,6 +129,7 @@ BEGIN
         BEGIN
             FOR tbd IN
                 SELECT
+                    o.objid,
                     o.object_type,
                     o.object_identity
                 FROM pg_event_trigger_dropped_objects() o
