@@ -28,7 +28,7 @@ jobs:
           if [[ $(pg_lsclusters | grep -i pg_drop_events | grep  5432 | grep 14) ]]; then 
               sudo pg_dropcluster 14 pg_drop_events
           fi
-          sudo pg_createcluster 14 pg_drop_events
+          sudo pg_createcluster 14 pg_drop_events -p 5432
           sudo pg_ctlcluster 14 pg_drop_events start
     
       - name: Clone pg_drop_events repository
