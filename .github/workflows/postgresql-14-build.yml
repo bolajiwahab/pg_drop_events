@@ -9,7 +9,7 @@ jobs:
       - name: Prepare the environment
         run: |
           sudo mkdir -p /etc/postgresql-common/createcluster.d
-          sudo cat >/etc/postgresql-common/createcluster.d/binary.conf <<EOF
+          cat >/etc/postgresql-common/createcluster.d/pg_drop_events.conf <<EOF
           create_main_cluster = false
           initdb_options = '-k'
           EOF
