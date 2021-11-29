@@ -1,3 +1,5 @@
+[![postgresql-14-build](https://github.com/bolajiwahab/pg_drop_events/actions/workflows/postgresql-14-build.yml/badge.svg)](https://github.com/bolajiwahab/pg_drop_events/actions/workflows/postgresql-14-build.yml)
+
 # What is pg_drop_events?
 The **pg_drop_events** is a PostgreSQL **extension** that logs transaction ids of drop table, drop column, drop materialized view statements to aid point in time recovery: To perform point in time recovery in case of a disaster whereby a table or a table column was mistakenly dropped, you simply specify the `xact_id` you get from the table `pg_drop_events` as the `recovery_target_xid`. See below user guide.
 
