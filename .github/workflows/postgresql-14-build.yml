@@ -40,7 +40,7 @@ jobs:
 
       - name: Start pg_drop_events tests
         run: |
-          make installcheck
+          sudo -u postgres make installcheck
 
       - name: Report on pg_drop_events test failure
         uses: actions/upload-artifact@v2
