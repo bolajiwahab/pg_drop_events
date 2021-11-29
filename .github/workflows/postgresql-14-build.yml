@@ -14,7 +14,7 @@ jobs:
           sudo echo 'create_main_cluster = false' > /etc/postgresql-common/createcluster.d/pg_drop_events.conf
           sudo echo "initdb_options = '-k'" >> /etc/postgresql-common/createcluster.d/pg_drop_events.conf
 
-      - name: Installs PostgreSQL 14
+      - name: Install PostgreSQL 14
         run: |
           sudo apt-get update
           sudo apt -y install gnupg2
@@ -40,7 +40,7 @@ jobs:
 
       - name: Start pg_drop_events tests
         run: |
-          sudo pwd
+          sudo chmod 766 $(pwd)
           sudo -u postgres make installcheck
 
       - name: Report on pg_drop_events test failure
