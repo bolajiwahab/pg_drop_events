@@ -13,7 +13,7 @@ jobs:
           sudo chmod 766 /etc/postgresql-common/createcluster.d/pg_drop_events.conf
           sudo echo 'create_main_cluster = false' > /etc/postgresql-common/createcluster.d/pg_drop_events.conf
           sudo echo "initdb_options = '-k'" >> /etc/postgresql-common/createcluster.d/pg_drop_events.conf
-          
+
       - name: Installs PostgreSQL 14
         run: |
           sudo apt-get update
@@ -25,12 +25,12 @@ jobs:
 
       - name: Initialize and start postgresql cluster
         run: |
-          if [[ $(pg_lsclusters | grep -i pg_drop_events | grep  5432 | grep 14) ]]; then 
+          if [[ $(pg_lsclusters | grep -i pg_drop_events | grep  5432 | grep 14) ]]; then
               sudo pg_dropcluster 14 pg_drop_events
           fi
           sudo pg_createcluster 14 pg_drop_events -p 5432
           sudo pg_ctlcluster 14 pg_drop_events start
-    
+
       - name: Clone pg_drop_events repository
         uses: actions/checkout@v2
 
@@ -40,7 +40,7 @@ jobs:
 
       - name: Start pg_drop_events tests
         run: |
-          sudo make installcheck
+          make installcheck
 
       - name: Report on pg_drop_events test failure
         uses: actions/upload-artifact@v2
