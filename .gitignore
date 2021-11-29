@@ -1,5 +1,3 @@
 results/
 regression.diffs
 regression.out
-/sql/pg_monkey--*
-!/sql/pg_monkey--*--*.sql
