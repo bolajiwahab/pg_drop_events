@@ -33,7 +33,7 @@ jobs:
 
       - name: Build pg_drop_events
         run: |
-          ls -l /usr/bin/pg_config
+          export PG_CONFIG=/usr/lib/postgresql/9.6/bin/pg_config
           sudo make clean && sudo make install
 
       - name: Start pg_drop_events tests
