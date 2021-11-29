@@ -17,7 +17,7 @@ jobs:
 
       - name: Initialize and start postgresql cluster
         run: |
-          pg_ctlcreatecluster 14 pg_drop_events
+          pg_createcluster 14 pg_drop_events
           pg_ctlcluster 14 pg_drop_events start
     
       - name: Clone pg_drop_events repository
