@@ -8,9 +8,8 @@ jobs:
     steps:
       - name: Prepare the environment
         run: |
-          sudo - root
           sudo mkdir -p /etc/postgresql-common/createcluster.d
-          sudo touch /etc/postgresql-common/createcluster.d/pg_drop_events.conf
+          sudo touch /etc/postgresql-common/createcluster.d/pgdropevents.conf
           sudo echo 'create_main_cluster = false' > /etc/postgresql-common/createcluster.d/pg_drop_events.conf
           sudo echo "initdb_options = '-k'" >> /etc/postgresql-common/createcluster.d/pg_drop_events.conf
 
