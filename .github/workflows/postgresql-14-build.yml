@@ -9,9 +9,9 @@ jobs:
       - name: Prepare the environment
         run: |
           sudo mkdir -p /etc/postgresql-common/createcluster.d
-          sudo touch /etc/postgresql-common/createcluster.d/pgdropevents.conf
-          ls -l /etc/postgresql-common/createcluster.d/pgdropevents.conf
-          sudo echo 'create_main_cluster = false' > /etc/postgresql-common/createcluster.d/pgdropevents.conf
+          sudo touch /etc/postgresql-common/createcluster.d/pg_drop_events.conf
+          sudo chmod 766 /etc/postgresql-common/createcluster.d/pg_drop_events.conf
+          sudo echo 'create_main_cluster = false' > /etc/postgresql-common/createcluster.d/pg_drop_events.conf
           sudo echo "initdb_options = '-k'" >> /etc/postgresql-common/createcluster.d/pg_drop_events.conf
 
       - name: Installs PostgreSQL 14
