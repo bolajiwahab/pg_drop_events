@@ -33,6 +33,7 @@ jobs:
 
       - name: Build pg_drop_events
         run: |
+          pg_config
           sudo make clean && sudo make install
 
       - name: Start pg_drop_events tests
