@@ -6,7 +6,14 @@ jobs:
     name: postgresql-14-build
     runs-on: ubuntu-latest
     steps:
-      - name: Installs postgres 14
+      - name: Prepare the environment
+        run: |
+          mkdir -p /etc/postgresql-common/createcluster.d
+          cat >/etc/postgresql-common/createcluster.d/binary.conf <<EOF
+          create_main_cluster = false
+          initdb_options = '-k'
+          EOF
+      - name: Installs PostgreSQL 14
         run: |
           sudo apt-get update
           sudo apt -y install gnupg2
