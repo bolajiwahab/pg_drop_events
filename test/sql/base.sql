@@ -58,7 +58,7 @@ DROP SCHEMA tf CASCADE;
 
 SELECT plan(1);
 
-SELECT is(count(*), 9::bigint, 'Record of transaction ids of dropped tables, materialized view, column should is correct'::text)
+SELECT is(count(*), 9::bigint, 'Record of transaction ids of dropped tables, materialized view, column is correct'::text)
 FROM public.pg_drop_events;
 
 SELECT * FROM finish();
