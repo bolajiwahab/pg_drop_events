@@ -8,8 +8,8 @@ jobs:
     steps:
       - name: Prepare the environment
         run: |
-          mkdir -p /etc/postgresql-common/createcluster.d
-          cat >/etc/postgresql-common/createcluster.d/binary.conf <<EOF
+          sudo mkdir -p /etc/postgresql-common/createcluster.d
+          sudo cat >/etc/postgresql-common/createcluster.d/binary.conf <<EOF
           create_main_cluster = false
           initdb_options = '-k'
           EOF
