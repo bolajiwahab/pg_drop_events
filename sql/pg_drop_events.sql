@@ -10,7 +10,7 @@ BEGIN
             query           text,
             xact_id         bigint,
             wal_position    pg_lsn,
-            objid             oid,
+            objid           oid,
             object_name     text,
             object_type     text,
             time            timestamp with time zone
@@ -22,7 +22,7 @@ BEGIN
             query           text,
             xact_id         xid8,
             wal_position    pg_lsn,
-            objid             oid,
+            objid           oid,
             object_name     text,
             object_type     text,
             time            timestamp with time zone
@@ -83,6 +83,7 @@ BEGIN
         BEGIN
             FOR tbd IN
                 SELECT
+                    o.objid,
                     o.object_type,
                     o.object_identity
                 FROM pg_catalog.pg_event_trigger_dropped_objects() o
@@ -128,6 +129,7 @@ BEGIN
         BEGIN
             FOR tbd IN
                 SELECT
+                    o.objid,
                     o.object_type,
                     o.object_identity
                 FROM pg_event_trigger_dropped_objects() o
