@@ -11,10 +11,7 @@ jobs:
           sudo mkdir -p /etc/postgresql-common/createcluster.d
           echo 'create_main_cluster = false' > /etc/postgresql-common/createcluster.d/pg_drop_events.conf
           echo "initdb_options = '-k'" >> /etc/postgresql-common/createcluster.d/pg_drop_events.conf
-          cat >/etc/postgresql-common/createcluster.d/pg_drop_events.conf <<EOF
-          create_main_cluster = false
-          initdb_options = '-k'
-          EOF
+
       - name: Installs PostgreSQL 14
         run: |
           sudo apt-get update
