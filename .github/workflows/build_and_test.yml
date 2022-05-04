@@ -1,10 +1,21 @@
-name: postgresql-9.5-build
-on: [push]
+name: Build and Test extension
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
 
 jobs:
-  build:
-    name: postgresql-9.5-build
+  build_and_test:
+    name: build_and_test
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        postgresql: [9.5, 9.6, 10, 11, 12, 13, 14]
+
     steps:
       - name: Prepare the environment
         run: |
@@ -14,26 +25,26 @@ jobs:
           sudo echo 'create_main_cluster = false' > /etc/postgresql-common/createcluster.d/pg_drop_events.conf
           sudo echo "initdb_options = '-k'" >> /etc/postgresql-common/createcluster.d/pg_drop_events.conf
 
-      - name: Install PostgreSQL 9.5
+      - name: Install PostgreSQL
         run: |
           sudo apt-get update
           sudo apt -y install gnupg2
           wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
-          echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" |sudo tee  /etc/apt/sources.list.d/pgdg.list
+          echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" | sudo tee  /etc/apt/sources.list.d/pgdg.list
           sudo apt update
-          sudo apt -y install postgresql-9.5 postgresql-common
+          sudo apt -y install postgresql-${{ matrix.postgresql }} postgresql-common
 
       - name: Initialize and start postgresql cluster
         run: |
-          sudo pg_createcluster 9.5 pg_drop_events -p 5432
-          sudo pg_ctlcluster 9.5 pg_drop_events start
+          sudo pg_createcluster ${{ matrix.postgresql }} pg_drop_events -p 5432
+          sudo pg_ctlcluster ${{ matrix.postgresql }} pg_drop_events start
 
       - name: Clone pg_drop_events repository
         uses: actions/checkout@v2
 
       - name: Build pg_drop_events
         run: |
-          sudo make clean && sudo make PG_CONFIG=/usr/lib/postgresql/9.5/bin/pg_config install
+          sudo make clean && sudo make PG_CONFIG=/usr/lib/postgresql/${{ matrix.postgresql }}/bin/pg_config install
 
       - name: Start pg_drop_events tests
         run: |

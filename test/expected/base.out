@@ -1,4 +1,3 @@
 /* setup */
 \unset ECHO
-1..1
-ok 1 - Record of transaction ids of dropped tables, materialized view, column is correct
+Record of transaction ids of dropped tables, materialized views, columns is correct -> true

@@ -47,7 +47,7 @@ BEGIN
                 AND c.relname = 'pg_class'
                 AND n.nspname = 'pg_catalog'
                 AND o.classid = c.oid
-                AND o.object_type = ANY ('{table,table column, materialized view}')
+                AND o.object_type = ANY ('{table, table column, materialized view}')
             LOOP
                 RAISE NOTICE '% % dropped by transaction %.', tbd.object_type, tbd.object_identity, pg_catalog.txid_current();
 
@@ -93,7 +93,7 @@ BEGIN
                 AND c.relname = 'pg_class'
                 AND n.nspname = 'pg_catalog'
                 AND o.classid = c.oid
-                AND o.object_type = ANY ('{table,table column, materialized view}')
+                AND o.object_type = ANY ('{table, table column, materialized view}')
             LOOP
                 RAISE NOTICE '% % dropped by transaction %.', tbd.object_type, tbd.object_identity, pg_catalog.pg_current_xact_id();
 
@@ -139,7 +139,7 @@ BEGIN
                 AND c.relname = 'pg_class'
                 AND n.nspname = 'pg_catalog'
                 AND o.classid = c.oid
-                AND o.object_type = ANY ('{table,table column, materialized view}')
+                AND o.object_type = ANY ('{table, table column, materialized view}')
             LOOP
                 RAISE NOTICE '% % dropped by transaction %.', tbd.object_type, tbd.object_identity, pg_catalog.txid_current();
 
