@@ -1,6 +1,6 @@
 # pg_drop_events extension
 comment = 'pg_drop_events - logs transaction ids of drop table, drop column, drop materialized view statements to aid point in time recovery'
-default_version = '1.0'
+default_version = '0.1'
 relocatable = false
 schema = 'public'
 requires = 'plpgsql'
