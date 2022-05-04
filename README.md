@@ -5,7 +5,7 @@ The **pg_drop_events** is a PostgreSQL **extension** that logs transaction ids o
 
 ### How pg_drop_events works?
 
-`pg_drop_events` uses event trigger to track what statement, what transaction and which user drops a table or a table column.
+`pg_drop_events` uses event trigger to track what statement, what transaction and which user drops a table, a table column or a materialized view.
 
 ## Documentation
 1. [Supported PostgreSQL Versions](#supported-postgresql-versions)
