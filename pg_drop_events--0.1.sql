@@ -1,3 +1,7 @@
+/* pg_drop_events/pg_drop_events--0.1.sql */
+
+-- complain if script is sourced in psql, rather than via create extension
+\echo Use "CREATE EXTENSION pg_drop_events VERSION '0.1'" to load this file. \quit
 DO $$
 DECLARE pg_version int;
 BEGIN
@@ -6,26 +10,26 @@ BEGIN
     IF pg_version < 130000 THEN
         CREATE TABLE public.pg_drop_events (
             pid             int,
-            username        text,
+            usename        text,
             query           text,
             xact_id         bigint,
             wal_position    pg_lsn,
             objid           oid,
             object_name     text,
             object_type     text,
-            time            timestamp with time zone
+            xact_time       timestamp with time zone
         );
     ELSE
         CREATE TABLE public.pg_drop_events (
             pid             int,
-            username        text,
+            usename        text,
             query           text,
             xact_id         xid8,
             wal_position    pg_lsn,
             objid           oid,
             object_name     text,
             object_type     text,
-            time            timestamp with time zone
+            xact_time       timestamp with time zone
     );
     END IF;
 
@@ -53,14 +57,14 @@ BEGIN
 
                 INSERT INTO public.pg_drop_events (
                     pid,
-                    username,
+                    usename,
                     query,
                     xact_id,
                     wal_position,
                     objid,
                     object_name,
                     object_type,
-                    time
+                    xact_time
                 )
                 SELECT
                     pg_catalog.pg_backend_pid(),
@@ -99,14 +103,14 @@ BEGIN
 
                 INSERT INTO public.pg_drop_events (
                     pid,
-                    username,
+                    usename,
                     query,
                     xact_id,
                     wal_position,
                     objid,
                     object_name,
                     object_type,
-                    time
+                    xact_time
                 )
                 SELECT
                     pg_catalog.pg_backend_pid(),
@@ -145,14 +149,14 @@ BEGIN
 
                 INSERT INTO public.pg_drop_events (
                     pid,
-                    username,
+                    usename,
                     query,
                     xact_id,
                     wal_position,
                     objid,
                     object_name,
                     object_type,
-                    time
+                    xact_time
                 )
                 SELECT
                     pg_catalog.pg_backend_pid(),

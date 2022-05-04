@@ -91,14 +91,13 @@ NOTICE:  table t.t2 dropped by transaction 1089.
 NOTICE:  table t.t1 dropped by transaction 1089.
 DROP SCHEMA
 
-postgres=# SELECT pid,username,query,xact_id,wal_position,object_name,object_type,xact_start FROM pg_drop_events;
-  pid  | username |              query              | xact_id | wal_position | object_name | object_type  |          xact_start
--------+----------+---------------------------------+---------+--------------+-------------+--------------+-------------------------------
-   729 | postgres | drop TABLE tab ;                |     884 | 2/7255F498   | public.tab  | table        | 2021-05-17 19:57:22.435495+08
- 12540 | postgres | DROP TABLE t.t3;                |    1085 | 2/729E7920   | t.t3        | table        | 2021-05-17 20:49:21.727209+08
- 12540 | postgres | ALTER TABLE t.t1 DROP COLUMN a; |    1088 | 2/729F7778   | t.t1.a      | table column | 2021-05-17 20:50:29.168078+08
- 12540 | postgres | DROP SCHEMA t CASCADE;          |    1089 | 2/729F7988   | t.t2        | table        | 2021-05-17 20:51:10.929153+08
- 12540 | postgres | DROP SCHEMA t CASCADE;          |    1089 | 2/729F7988   | t.t1        | table        | 2021-05-17 20:51:10.929153+08
+postgres=# SELECT pid, usename, query, xact_id, wal_position, objid, object_name, object_type, xact_time FROM pg_drop_events;
+  pid  | usename   |             query              | xact_id | wal_position | objid | object_name | object_type  |             xact_time
+-------+-----------+--------------------------------+---------+--------------+-------+-------------+--------------+-------------------------------
+ 54630 | bolaji    | DROP TABLE t.t3                |   25184 | 1/A266B090   | 51293 | t.t3        | table        | 2022-05-04 17:16:32.913969+00
+ 54633 | bolaji    | ALTER TABLE t.t1 DROP COLUMN a |   25185 | 1/A266BBF8   | 51287 | t.t1.a      | table column | 2022-05-04 17:16:39.033796+00
+ 54638 | postgres  | DROP SCHEMA t CASCADE          |   25186 | 1/A266BEC0   | 51287 | t.t1        | table        | 2022-05-04 17:16:56.094366+00
+ 54639 | postgres  | DROP SCHEMA t CASCADE          |   25186 | 1/A266BEC0   | 51290 | t.t2        | table        | 2022-05-04 17:16:56.094366+00
 
 ````
 

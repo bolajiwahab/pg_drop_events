@@ -1,5 +1,5 @@
 EXTENSION   = pg_drop_events
-EXTVERSION  = 1.0
+EXTVERSION  = 0.1
 DATA        = $(filter-out $(DATA_built), $(wildcard *--*.sql))
 DOCS         = $(wildcard doc/*.md)
 TESTS        = $(wildcard test/sql/*.sql)
@@ -24,7 +24,7 @@ endef
 export CONTROL_FILE_CONTENT
 export EXT_PREFIX
 
-OBJECTS = sql/pg_drop_events.sql
+OBJECTS = src/pg_drop_events.sql
 REGRESS      = $(patsubst test/sql/%.sql,%,$(TESTS))
 REGRESS_OPTS = --inputdir=test
 
