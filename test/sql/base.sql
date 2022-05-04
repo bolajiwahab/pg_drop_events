@@ -21,9 +21,6 @@ SET client_min_messages TO warning;
 
 CREATE EXTENSION pg_drop_events;
 
---- pgtap function
-\i test/pgtap.sql
-
 CREATE SCHEMA tf;
 
 CREATE TABLE tf.t();
@@ -56,11 +53,6 @@ DROP TABLE tf.inheritance CASCADE;
 
 DROP SCHEMA tf CASCADE;
 
-SELECT plan(1);
-
-SELECT is(count(*), 9::bigint, 'Record of transaction ids of dropped tables, materialized view, column is correct'::text)
-FROM public.pg_drop_events;
-
-SELECT * FROM finish();
+SELECT 'Record of transaction ids of dropped tables, materialized views, columns is correct'::text || ' -> ' || (count(*) = 9 ) from public.pg_drop_events;
 
 ROLLBACK;
