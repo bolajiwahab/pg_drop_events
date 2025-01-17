@@ -57,7 +57,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: dist
-          path: /*.zip
+          path: ./${{ steps.bundle-extension.outputs.bundle }}
 
   github_release:
     name: Create GitHub Release
