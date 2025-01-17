@@ -83,3 +83,27 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
             gh release create ${{ needs.details.outputs.tag_name }} dist/* --title ${{ needs.details.outputs.tag_name }} --generate-notes
+
+  pgxn_release:
+    name: Create PGXN Release
+    needs: [setup_and_build, details]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+  
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+      - name: Create PGXN Release
+        env:
+          PGXN_USERNAME: ${{ secrets.PGXN_USERNAME }}
+          PGXN_PASSWORD: ${{ secrets.PGXN_PASSWORD }}
+        run: pgxn-release
