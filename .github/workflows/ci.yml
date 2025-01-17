@@ -23,6 +23,11 @@ jobs:
     runs-on: ubuntu-latest
     container: pgxn/pgxn-tools
     steps:
-      - run: pg-start ${{ matrix.postgresql }}
-      - uses: actions/checkout@v3
-      - run: pg-build-test
+      - name: Start PostgreSQL
+        run: pg-start ${{ matrix.postgresql }}
+
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Run tests
+        run: pg-build-test
