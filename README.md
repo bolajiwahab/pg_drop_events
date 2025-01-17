@@ -136,7 +136,7 @@ For reference, see <https://www.postgresql.org/docs/current/runtime-config-wal.h
 
 Copyright © 2025 Bolaji Wahab.
 
-This module is free software; you can redistribute it and/or modify it under the [PostgreSQL License](http://www.opensource.org/licenses/postgresql).
+This module is free software; you can redistribute it and/or modify it under the [PostgreSQL License](https://www.postgresql.org/about/licence/).
 
 Permission to use, copy, modify, and distribute this software and its documentation for any purpose, without fee, and without a written agreement is hereby granted, provided that the above copyright notice and this paragraph and the following two paragraphs appear in all copies.
 
