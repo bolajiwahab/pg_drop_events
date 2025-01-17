@@ -1,0 +1,85 @@
+name: release
+
+on:
+  push:
+    tags:
+      - "[0-9]+.[0-9]+.[0-9]+"
+      - "[0-9]+.[0-9]+.[0-9]+a[0-9]+"
+      - "[0-9]+.[0-9]+.[0-9]+b[0-9]+"
+      - "[0-9]+.[0-9]+.[0-9]+rc[0-9]+"
+
+jobs:
+  details:
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    outputs:
+      new_version: ${{ steps.release.outputs.new_version }}
+      suffix: ${{ steps.release.outputs.suffix }}
+      tag_name: ${{ steps.release.outputs.tag_name }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Extract tag and Details
+        id: release
+        run: |
+            if [ "${{ github.ref_type }}" = "tag" ]; then
+            TAG_NAME=${GITHUB_REF#refs/tags/}
+            NEW_VERSION=$(echo $TAG_NAME | awk -F'-' '{print $1}')
+            SUFFIX=$(echo $TAG_NAME | grep -oP '[a-z]+[0-9]+' || echo "")
+            echo "new_version=$NEW_VERSION" >> "$GITHUB_OUTPUT"
+            echo "suffix=$SUFFIX" >> "$GITHUB_OUTPUT"
+            echo "tag_name=$TAG_NAME" >> "$GITHUB_OUTPUT"
+            echo "Version is $NEW_VERSION"
+            echo "Suffix is $SUFFIX"
+            echo "Tag name is $TAG_NAME"
+            else
+            echo "No tag found"
+            exit 1
+            fi
+
+  setup_and_build:
+    permissions:
+      contents: write
+    needs: [details]
+    runs-on: ubuntu-latest
+    container: pgxn/pgxn-tools
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Bundle the extension
+        id: bundle-extension
+        run: pgxn-bundle
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+  github_release:
+    name: Create GitHub Release
+    needs: [setup_and_build, details]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+  
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+  
+      - name: Create GitHub Release
+        id: create_release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+            gh release create ${{ needs.details.outputs.tag_name }} dist/* --title ${{ needs.details.outputs.tag_name }} --generate-notes
