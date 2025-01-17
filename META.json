@@ -1,0 +1,52 @@
+{
+    "name": "pg_drop_events",
+    "abstract": "Logs transaction ids of drop table, drop column, drop materialized view statements to aid point in time recovery.",
+    "description": "This extension logs transaction ids of drop table, drop column, drop materialized view statements to aid point in time recovery.",
+    "version": "0.1.0",
+    "maintainer": [
+        "Bolaji Wahab <bolajiwahab23@gmail.com>"
+    ],
+    "license": {
+        "PostgreSQL": "https://www.postgresql.org/about/licence"
+    },
+    "release_status": "stable",
+    "provides": {
+        "pg_drop_events": {
+            "abstract": "Logs transaction ids of drop table, drop column, drop materialized view statements to aid point in time recovery.",
+            "file": "src/pg_drop_events.sql",
+            "docfile": "doc/pg_drop_events.md",
+            "version": "0.1.0"
+        }
+    },
+    "prereqs": {
+        "runtime": {
+            "requires": {
+                "plpgsql": 0,
+                "PostgreSQL": "9.5.0"
+            },
+            "recommends": {
+                "PostgreSQL": "17.0"
+             }
+        }
+    },
+    "resources": {
+        "bugtracker": {
+            "web": "https://github.com/bolajiwahab/pg_drop_events/issues/"
+        },
+        "repository": {
+            "url": "git://github.com/bolajiwahab/pg_drop_events.git",
+            "web": "https://github.com/bolajiwahab/pg_drop_events/",
+            "type": "git"
+        }
+    },
+    "generated_by": "Bolaji Wahab",
+    "meta-spec": {
+        "version": "1.0.0",
+        "url": "https://pgxn.org/meta/spec.txt"
+    },
+    "tags": [
+        "pitr",
+        "point in time recovery",
+        "recovery"
+    ]
+}
