@@ -1,19 +1,22 @@
-[![build_and_test](https://github.com/bolajiwahab/pg_drop_events/actions/workflows/build_and_test.yml/badge.svg)](https://github.com/bolajiwahab/pg_drop_events/actions/workflows/build_and_test.yml)
+# pg_drop_events
 
-# What is pg_drop_events?
+[![CI](https://github.com/bolajiwahab/pg_drop_events/actions/workflows/ci.yml/badge.svg)](https://github.com/bolajiwahab/pg_drop_events/actions/workflows/ci.yml)
+
 The **pg_drop_events** is a PostgreSQL **extension** that logs transaction ids of drop table, drop column, drop materialized view statements to aid point in time recovery: To perform point in time recovery in case of a disaster whereby a table or a table column was mistakenly dropped, you simply specify the `xact_id` you get from the table `pg_drop_events` as the `recovery_target_xid`. See below user guide.
 
-### How pg_drop_events works?
+## How pg_drop_events works?
 
 `pg_drop_events` uses event trigger to track what statement, what transaction and which user drops a table, a table column or a materialized view.
 
 ## Documentation
+
 1. [Supported PostgreSQL Versions](#supported-postgresql-versions)
 2. [Installation](#installation)
 3. [Setup](#setup)
-4. [User Guide](#User-Guide)
+4. [User Guide](#user-guide)
 
 ## Supported PostgreSQL Versions
+
 The ``pg_drop_events`` should work on the latest version of PostgreSQL but is only tested with these PostgreSQL versions:
 
 | Distribution            |  Version       | Supported          |
@@ -31,21 +34,27 @@ The ``pg_drop_events`` should work on the latest version of PostgreSQL but is on
 ### Installing from source code
 
 You can download the source code of  ``pg_drop_events`` from [this GitHub page](github.com:bolajiwahab/pg_drop_events.git) or using git:
+
 ```sh
 git clone git@github.com:bolajiwahab/pg_drop_events.git
 ```
+
 Compile and install the extension. Depending on your distribution, you might need to add sudo.
+
 ```sh
 cd pg_drop_events
 make clean && make install
 ```
+
 ## Setup
 
 Create the extension using the ``CREATE EXTENSION`` command.
+
 ```sql
 CREATE EXTENSION pg_drop_events;
 CREATE EXTENSION
 ```
+
 ## User-Guide
 
 This document describes the configuration, key features and usage of ``pg_drop_events`` extension.
@@ -61,7 +70,8 @@ CREATE EXTENSION
 
 ## Usage
 
-### Example :
+### Example
+
 ```sql
 postgres=# CREATE SCHEMA t;
 CREATE SCHEMA
@@ -102,8 +112,10 @@ postgres=# SELECT pid, usename, query, xact_id, wal_position, objid, object_name
 ````
 
 ## Point in time recovery (PITR)
+
 To perform point in time recovery, you need access to `pg_drop_events` data.
 We have this mapping of options and the respective PostgreSQL recovery options:
+
 ```
 pg_drop_events.xact_id      => recovery_target_xid
 pg_drop_events.time         => recovery_target_time
@@ -111,14 +123,16 @@ pg_drop_events.wal_position => recovery_target_lsn
 
 ```
 
-For reference, see https://www.postgresql.org/docs/13/runtime-config-wal.html
+For reference, see <https://www.postgresql.org/docs/13/runtime-config-wal.html>
 
 Author
 ------
+
 [Bolaji K. Wahab @bolajiwahab]
 
 Copyright and License
 ---------------------
+
 Copyright (c) 2021 Bolaji Wahab.
 
 This module is free software; you can redistribute it and/or modify it under the [PostgreSQL License](http://www.opensource.org/licenses/postgresql).
