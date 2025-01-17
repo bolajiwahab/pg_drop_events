@@ -2,7 +2,9 @@
 
 [![CI](https://github.com/bolajiwahab/pg_drop_events/actions/workflows/ci.yml/badge.svg)](https://github.com/bolajiwahab/pg_drop_events/actions/workflows/ci.yml)
 
-The **pg_drop_events** is a PostgreSQL **extension** that logs transaction ids of drop table, drop column, drop materialized view statements to aid point in time recovery: To perform point in time recovery in case of a disaster whereby a table or a table column was mistakenly dropped, you simply specify the `xact_id` you get from the table `pg_drop_events` as the `recovery_target_xid`. See below user guide.
+**pg_drop_events** is a PostgreSQL **extension** that logs transaction ids of drop table, drop column, drop materialized view statements to aid point in time recovery.
+
+To perform point in time recovery in case of a disaster whereby a table or a table column was mistakenly dropped, you simply specify the `xact_id` you get from the `pg_drop_events` table as the `recovery_target_xid`. For more information, see [user guide](#user-guide).
 
 ## How pg_drop_events works?
 
@@ -21,19 +23,22 @@ The ``pg_drop_events`` should work on the latest version of PostgreSQL but is on
 
 | Distribution            |  Version       | Supported          |
 | ------------------------|----------------|--------------------|
-| PostgreSQL              | Version 9.5     | :heavy_check_mark: |
-| PostgreSQL              | Version 9.6     | :heavy_check_mark: |
+| PostgreSQL              | Version 9.5    | :heavy_check_mark: |
+| PostgreSQL              | Version 9.6    | :heavy_check_mark: |
 | PostgreSQL              | Version 10     | :heavy_check_mark: |
 | PostgreSQL              | Version 11     | :heavy_check_mark: |
 | PostgreSQL              | Version 12     | :heavy_check_mark: |
 | PostgreSQL              | Version 13     | :heavy_check_mark: |
 | PostgreSQL              | Version 14     | :heavy_check_mark: |
+| PostgreSQL              | Version 15     | :heavy_check_mark: |
+| PostgreSQL              | Version 16     | :heavy_check_mark: |
+| PostgreSQL              | Version 17     | :heavy_check_mark: |
 
 ## Installation
 
 ### Installing from source code
 
-You can download the source code of  ``pg_drop_events`` from [this GitHub page](github.com:bolajiwahab/pg_drop_events.git) or using git:
+You can download the source code of ``pg_drop_events`` from [this GitHub page](github.com:bolajiwahab/pg_drop_events.git) or using git:
 
 ```sh
 git clone git@github.com:bolajiwahab/pg_drop_events.git
@@ -51,7 +56,7 @@ make clean && make install
 Create the extension using the ``CREATE EXTENSION`` command.
 
 ```sql
-CREATE EXTENSION pg_drop_events;
+postgres=# CREATE EXTENSION pg_drop_events;
 CREATE EXTENSION
 ```
 
@@ -59,12 +64,12 @@ CREATE EXTENSION
 
 This document describes the configuration, key features and usage of ``pg_drop_events`` extension.
 
-For how to install and set up ``pg_drop_events``, see [README](https://github.com/bolajiwahab/pg_drop_events/blob/master/README.md).
+For how to install and set up ``pg_drop_events``, see [installation](#installation).
 
 After you've installed, create the ``pg_drop_events`` extension using the ``CREATE EXTENSION`` command.
 
 ```sql
-CREATE EXTENSION pg_drop_events;
+postgres=# CREATE EXTENSION pg_drop_events;
 CREATE EXTENSION
 ```
 
@@ -116,29 +121,25 @@ postgres=# SELECT pid, usename, query, xact_id, wal_position, objid, object_name
 To perform point in time recovery, you need access to `pg_drop_events` data.
 We have this mapping of options and the respective PostgreSQL recovery options:
 
-```
+```bash
 pg_drop_events.xact_id      => recovery_target_xid
 pg_drop_events.time         => recovery_target_time
 pg_drop_events.wal_position => recovery_target_lsn
 
 ```
 
-For reference, see <https://www.postgresql.org/docs/13/runtime-config-wal.html>
+For reference, see <https://www.postgresql.org/docs/current/runtime-config-wal.html>
 
-Author
-------
+## Copyright and License
 
-[Bolaji K. Wahab @bolajiwahab]
+------------------------
 
-Copyright and License
----------------------
-
-Copyright (c) 2021 Bolaji Wahab.
+Copyright © 2025 Bolaji Wahab.
 
 This module is free software; you can redistribute it and/or modify it under the [PostgreSQL License](http://www.opensource.org/licenses/postgresql).
 
 Permission to use, copy, modify, and distribute this software and its documentation for any purpose, without fee, and without a written agreement is hereby granted, provided that the above copyright notice and this paragraph and the following two paragraphs appear in all copies.
 
-In no event shall Bolaji K. Wahab be liable to any party for direct, indirect, special, incidental, or consequential damages, including lost profits, arising out of the use of this software and its documentation, even if Bolaji K. Wahab has been advised of the possibility of such damage.
+In no event shall Bolaji Wahab be liable to any party for direct, indirect, special, incidental, or consequential damages, including lost profits, arising out of the use of this software and its documentation, even if Bolaji K. Wahab has been advised of the possibility of such damage.
 
-Bolaji K. Wahab specifically disclaims any warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose. The software provided hereunder is on an "as is" basis, and Bolaji K. Wahab has no obligations to provide maintenance, support, updates, enhancements, or modifications.
+Bolaji Wahab specifically disclaims any warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose. The software provided hereunder is on an "as is" basis, and Bolaji K. Wahab has no obligations to provide maintenance, support, updates, enhancements, or modifications.
