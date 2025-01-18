@@ -106,4 +106,4 @@ jobs:
         env:
           PGXN_USERNAME: ${{ secrets.PGXN_USERNAME }}
           PGXN_PASSWORD: ${{ secrets.PGXN_PASSWORD }}
-        run: pgxn-release
+        run: pgxn-release dist/*
