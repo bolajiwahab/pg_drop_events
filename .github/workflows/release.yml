@@ -88,6 +88,8 @@ jobs:
     name: Create PGXN Release
     needs: [setup_and_build, details]
     runs-on: ubuntu-latest
+    environment:
+      name: release
     container: pgxn/pgxn-tools
     permissions:
       contents: write
