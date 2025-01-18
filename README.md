@@ -1,6 +1,8 @@
 # pg_drop_events
 
 [![CI](https://github.com/bolajiwahab/pg_drop_events/actions/workflows/ci.yml/badge.svg)](https://github.com/bolajiwahab/pg_drop_events/actions/workflows/ci.yml)
+[![PGXN version](https://badge.fury.io/pg/pg_drop_events.svg)](https://badge.fury.io/pg/pg_drop_events)
+[![release](https://github.com/bolajiwahab/pg_drop_events/actions/workflows/release.yml/badge.svg?branch=main)](https://github.com/bolajiwahab/pg_drop_events/actions/workflows/release.yml)
 
 **pg_drop_events** is a PostgreSQL **extension** that logs transaction ids of drop table, drop column, drop materialized view statements to aid point in time recovery.
 
